@@ -1,0 +1,2 @@
+SELECT id, name, turret__r.name, turret__r.tank__r.name, turret__r.tank__r.country__c
+FROM Gun__c
