@@ -1,0 +1,13 @@
+<apex:page standardController="Turret__c">
+    <apex:pageBlock>
+        <apex:pageBlockSection title="Turret Details" columns="1">
+            <apex:outputField value="{!Turret__c.name}" />
+            <apex:outputField value="{!Turret__c.Tank__r.name}" />
+
+            <apex:pageBlockTable value="{!Turret__c.Gun__r}" var="gun">
+                <apex:column value="{!gun.name}"></apex:column>
+                <apex:column value="{!gun.caliber__c}"></apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:page>
