@@ -1,0 +1,12 @@
+<apex:page standardController="Tank__c">
+    <apex:form>
+        <apex:pageBlock>
+            <apex:pageBlockSection title="Create Tank" columns="1">
+                <apex:inputField value="{!Tank__c.name}" />
+                <apex:inputField value="{!Tank__c.country__c}" />
+
+                <apex:commandButton value="Save" action="{!save}" />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
