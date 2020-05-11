@@ -6,8 +6,8 @@
             <apex:outputField value="{!Turret__c.Tank__r.Name}" />
 
             <apex:pageBlockTable value="{!Turret__c.Gun__r}" var="gun">
-                <apex:column value="{!gun.Name}"></apex:column>
-                <apex:column value="{!gun.Caliber__c}"></apex:column>
+                <apex:column value="{!gun.Name}" />
+                <apex:column value="{!gun.Caliber__c}" />
             </apex:pageBlockTable>
         </apex:pageBlockSection>
     </apex:pageBlock>
