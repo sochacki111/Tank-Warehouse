@@ -6,6 +6,7 @@ public class TankControllerExtension {
     }
 
     public PageReference createTank() {
+        System.debug(tank);
         try {
             insert tank;
             ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.CONFIRM, 'Tank has been created');
@@ -17,4 +18,17 @@ public class TankControllerExtension {
         return null;
     }
 
+    public PageReference deleteTank() {
+        PageReference pr = Page.Tanks;
+        pr.setRedirect(true);
+        pr.getParameters().put('message', 'Hello, World!');
+        try {
+            delete tank;
+            ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.CONFIRM, 'Tank has been removed');
+            ApexPages.addMessage(myMsg);
+        } catch(DmlException e) {
+            System.debug('The following exception has occurred: ' + e.getMessage());
+        }
+        return pr;
+    }
 }
