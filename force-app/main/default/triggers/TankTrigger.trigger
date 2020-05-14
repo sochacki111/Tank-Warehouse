@@ -1,7 +1,7 @@
 trigger TankTrigger on Tank__c ( after delete, after insert, after undelete, after update,
                                  before delete, before insert, before update) {
 
-	if(TriggerExceptionHelper.isTriggerEnabled('TankTrigger')) {
+	if(TriggerExceptionHelper.isTriggerEnabled('TankTrigger__c')) {
 		if(Trigger.operationType == System.TriggerOperation.BEFORE_INSERT) {
 			TankTriggerHandler.onBeforeInsert(Trigger.new);
 		}
