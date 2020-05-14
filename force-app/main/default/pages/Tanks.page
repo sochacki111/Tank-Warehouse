@@ -1,0 +1,9 @@
+<apex:page standardController="Tank__c" recordSetVar="tanks">
+    <apex:pageBlock title="Tank List">
+        <apex:pageBlockTable value="{!tanks}" var="tank">
+            <apex:column headerValue="Tank Name">
+                <apex:outputLink value="/apex/TankDetails?id={!tank.id}">{!tank.Name}</apex:outputLink>
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:page>
