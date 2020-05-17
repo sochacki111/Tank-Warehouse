@@ -37,7 +37,7 @@ global class AssignContactsToAccountsBatch implements Database.Batchable<SObject
 	global void execute(Database.BatchableContext bc, List<Contact> contacts) {
 		for (Contact c : contacts) {
 			for (Account a : accounts) {
-				if (c.lastName == a.name) {
+				if (c.lastName == a.name && c.accountId != a.id) {
 					c.accountId = a.Id;
 					contactsByAccountsToUpdate.get(a.name).add(c);
 					break;
@@ -55,7 +55,6 @@ global class AssignContactsToAccountsBatch implements Database.Batchable<SObject
 		for (List<Contact> contacts: contactsByAccountsToUpdate.values()) {
 			contactsToUpdate.addAll(contacts);
 		}
-
 		try {
 			update contactsToUpdate;
 
