@@ -3,16 +3,16 @@ Integer numOfCompanies = 6;
 List<Contact> employees = new List<Contact>();
 
 Integer j = 0;
-for (Integer i = 0; i < numOfEmployees; i ++) {    
-    Contact e = new Contact(
-        FirstName = 'Employee ' + i,
-        LastName = 'Company ' + j
-    );
-    employees.add(e);
+for (Integer i = 0; i < numOfEmployees; i++) {
+	Contact emploee = new Contact(
+		firstName = 'Employee ' + i,
+		lastName = 'Company ' + j
+	);
+	employees.add(emploee);
 
-    j ++;
-    if (j >= numOfCompanies) {
-        j = 0;
-    }
+	j++;
+	if (j >= numOfCompanies) {
+		j = 0;
+	}
 }
 insert employees;
