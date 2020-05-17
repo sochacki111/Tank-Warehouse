@@ -155,8 +155,9 @@
     <externalSharingModel>ControlledByParent</externalSharingModel>
     <label>Tank History</label>
     <nameField>
-        <label>Tank History Name</label>
-        <type>Text</type>
+        <displayFormat>H-{0000}</displayFormat>
+        <label>Tank History Number</label>
+        <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Tank History</pluralLabel>
     <searchLayouts/>

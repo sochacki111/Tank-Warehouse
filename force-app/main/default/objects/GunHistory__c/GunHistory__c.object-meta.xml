@@ -155,8 +155,9 @@
     <externalSharingModel>ControlledByParent</externalSharingModel>
     <label>Gun History</label>
     <nameField>
-        <label>GunHistory Name</label>
-        <type>Text</type>
+        <displayFormat>H-{0}</displayFormat>
+        <label>Gun History Number</label>
+        <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Gun History</pluralLabel>
     <searchLayouts/>

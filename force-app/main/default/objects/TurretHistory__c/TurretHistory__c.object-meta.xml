@@ -155,8 +155,9 @@
     <externalSharingModel>ControlledByParent</externalSharingModel>
     <label>Turret History</label>
     <nameField>
-        <label>TurretHistory Name</label>
-        <type>Text</type>
+        <displayFormat>H-{0}</displayFormat>
+        <label>Turret History Number</label>
+        <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Turret History</pluralLabel>
     <searchLayouts/>
