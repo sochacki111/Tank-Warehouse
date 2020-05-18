@@ -33,6 +33,7 @@
                 <apex:commandButton value="Save" action="{!updateTank}" id="saveButton" style="display:none" />
                 <apex:commandButton value="Delete" action="{!deleteTank}" />
             </apex:pageBlockButtons>
+            <apex:outputLink value="/apex/Tanks">Back to Tank List</apex:outputLink>
         </apex:pageBlock>
     </apex:form>
 </apex:page>
