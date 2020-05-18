@@ -6,15 +6,24 @@ public class TankControllerExtension {
     }
 
     public PageReference createTank() {
-        System.debug(tank);
         try {
-            insert tank;
+            insert tank.clone(false, false, false, false);
             ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.CONFIRM, 'Tank has been created');
             ApexPages.addMessage(myMsg);
         } catch(DmlException e) {
             System.debug('The following exception has occurred: ' + e.getMessage());
         }
+        return null;
+    }
 
+    public PageReference updateTank() {
+        try {
+            update tank;
+            ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.CONFIRM, 'Tank has been updated');
+            ApexPages.addMessage(myMsg);
+        } catch(DmlException e) {
+            System.debug('The following exception has occurred: ' + e.getMessage());
+        }
         return null;
     }
 

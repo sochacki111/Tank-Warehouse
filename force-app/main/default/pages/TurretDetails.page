@@ -1,14 +1,32 @@
-<apex:page standardController="Turret__c">
-    <apex:pageBlock>
-        <apex:pageBlockSection title="Turret Details" columns="1">
-            <apex:outputField value="{!Turret__c.Name}" />
-            <apex:outputField value="{!Turret__c.ManholeNumber__c}" />
-            <apex:outputField value="{!Turret__c.Tank__r.Name}" />
+<apex:page standardController="Turret__c" extensions="TurretControllerExtension">
+    <apex:form>
+        <apex:pageMessages id="messages" />
+        <apex:pageBlock title="Turret Details">
+            <apex:pageBlockSection columns="1">
+                <apex:outputField value="{!Turret__c.Name}">
+                    <apex:inlineEditSupport event="ondblClick" showOnEdit="saveButton" />
+                </apex:outputField>
+                <apex:outputField value="{!Turret__c.ManholeNumber__c}">
+                    <apex:inlineEditSupport event="ondblClick" showOnEdit="saveButton" />
+                </apex:outputField>
+                <apex:outputField value="{!Turret__c.Tank__r.Name}" />
 
-            <apex:pageBlockTable value="{!Turret__c.Gun__r}" var="gun">
-                <apex:column value="{!gun.Name}" />
-                <apex:column value="{!gun.Caliber__c}" />
-            </apex:pageBlockTable>
-        </apex:pageBlockSection>
-    </apex:pageBlock>
+                <apex:pageBlockTable value="{!Turret__c.Gun__r}" var="gun">
+                    <apex:column headerValue="Gun Name">
+                        <apex:outputLink value="/apex/GunDetails?id={!gun.id}">{!gun.Name}</apex:outputLink>
+                    </apex:column>
+                    <apex:column value="{!gun.Caliber__c}" />
+                </apex:pageBlockTable>
+
+                <apex:pageBlockTable value="{!Turret__c.TurretHistory__r}" var="history">
+                    <apex:column headerValue="Record History" value="{!history.type__c}" />
+                    <apex:column value="{!history.modifyDate__c}" />
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Save" action="{!updateTurret}" id="saveButton" style="display:none" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
 </apex:page>

@@ -1,13 +1,31 @@
 <apex:page standardController="Tank__c" extensions="TankControllerExtension">
     <apex:form>
+        <apex:pageMessages id="messages" />
         <apex:pageBlock title="Tank Details">
             <apex:pageBlockSection columns="1">
-                <apex:outputField value="{!Tank__c.Name}" />
-                <apex:outputField value="{!Tank__c.Country__c}" />
+                <apex:outputField value="{!Tank__c.Name}">
+                    <apex:inlineEditSupport event="ondblClick" showOnEdit="saveButton" />
+                </apex:outputField>
+                <apex:outputField value="{!Tank__c.Country__c}">
+                    <apex:inlineEditSupport event="ondblClick" showOnEdit="saveButton" />
+                </apex:outputField>
                 <apex:outputField value="{!Tank__c.NumberOfTurrets__c}" />
+
+                <apex:pageBlockTable value="{!Tank__c.Turrets__r}" var="turret">
+                    <apex:column headerValue="Turret Name">
+                        <apex:outputLink value="/apex/TurretDetails?id={!turret.id}">{!turret.Name}</apex:outputLink>
+                    </apex:column>
+                </apex:pageBlockTable>
+
+                <apex:pageBlockTable value="{!Tank__c.TankHistory__r}" var="history">
+                    <apex:column headerValue="Record History" value="{!history.type__c}" />
+                    <apex:column value="{!history.modifyDate__c}" />
+                </apex:pageBlockTable>
             </apex:pageBlockSection>
+
             <apex:pageBlockButtons location="bottom">
-                <apex:commandButton action="{!deleteTank}" value="Delete" />
+                <apex:commandButton value="Save" action="{!updateTank}" id="saveButton" style="display:none" />
+                <apex:commandButton value="Delete" action="{!deleteTank}" />
             </apex:pageBlockButtons>
         </apex:pageBlock>
     </apex:form>

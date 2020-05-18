@@ -1,9 +1,25 @@
-<apex:page standardController="Gun__c">
-    <apex:pageBlock>
-        <apex:pageBlockSection title="Gun Details" columns="1">
-            <apex:outputField value="{!Gun__c.Name}" />
-            <apex:outputField value="{!Gun__c.Caliber__c}" />
-            <apex:outputField label="Tank Country" value="{!Gun__c.Turret__r.Tank__r.Country__c}" />
-        </apex:pageBlockSection>
-    </apex:pageBlock>
+<apex:page standardController="Gun__c" extensions="GunControllerExtension">
+    <apex:form>
+        <apex:pageMessages id="messages" />
+        <apex:pageBlock title="Gun Details">
+            <apex:pageBlockSection columns="1">
+                <apex:outputField value="{!Gun__c.Name}">
+                    <apex:inlineEditSupport event="ondblClick" showOnEdit="saveButton" />
+                </apex:outputField>
+                <apex:outputField value="{!Gun__c.Caliber__c}">
+                    <apex:inlineEditSupport event="ondblClick" showOnEdit="saveButton" />
+                </apex:outputField>
+                <apex:outputField label="Tank Country" value="{!Gun__c.Turret__r.Tank__r.Country__c}" />
+
+                <apex:pageBlockTable value="{!Gun__c.GunHistory__r}" var="history">
+                    <apex:column headerValue="Record History" value="{!history.type__c}" />
+                    <apex:column value="{!history.modifyDate__c}" />
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Save" action="{!updateGun}" id="saveButton" style="display:none" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
 </apex:page>
