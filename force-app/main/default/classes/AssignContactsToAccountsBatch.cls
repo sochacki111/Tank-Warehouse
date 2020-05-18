@@ -10,7 +10,6 @@ global class AssignContactsToAccountsBatch implements Database.Batchable<SObject
 		this.accountNamePrefix = accountNamePrefix + ' %';
 		this.contactsByAccountsToUpdate = new Map<String,List<Contact>>();
 
-		// Is it okay to call soql query from constructor?
 		this.accounts = [
 			select id,
 			name
