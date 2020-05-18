@@ -11,16 +11,22 @@
                 </apex:outputField>
                 <apex:outputField value="{!Tank__c.NumberOfTurrets__c}" />
 
-                <apex:pageBlockTable value="{!Tank__c.Turrets__r}" var="turret">
-                    <apex:column headerValue="Turret Name">
-                        <apex:outputLink value="/apex/TurretDetails?id={!turret.id}">{!turret.Name}</apex:outputLink>
-                    </apex:column>
-                </apex:pageBlockTable>
+                <apex:pageBlockSection title="Turrets" columns="1">
+                    <apex:pageBlockTable value="{!Tank__c.Turrets__r}" var="turret">
+                        <apex:column headerValue="Turret Name">
+                            <apex:outputLink value="/apex/TurretDetails?id={!turret.id}">{!turret.Name}</apex:outputLink>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
 
-                <apex:pageBlockTable value="{!Tank__c.TankHistory__r}" var="history">
-                    <apex:column headerValue="Record History" value="{!history.type__c}" />
-                    <apex:column value="{!history.modifyDate__c}" />
-                </apex:pageBlockTable>
+                <apex:pageBlockSection title="Tank History" columns="1">
+                    <apex:pageBlockTable value="{!Tank__c.TankHistory__r}" var="history">
+                        <apex:column value="{!history.action__c}" />
+                        <apex:column value="{!history.date__c}" />
+                        <apex:column value="{!history.createdBy.name}" headerValue="User" />
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+
             </apex:pageBlockSection>
 
             <apex:pageBlockButtons location="bottom">
