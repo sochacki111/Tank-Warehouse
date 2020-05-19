@@ -33,8 +33,8 @@ global class AssignContactsToAccountsBatch implements Database.Batchable<SObject
 		]);
 	}
 
-	global void execute(Database.BatchableContext bc, List<Contact> contacts) {
-		for (Contact c : contacts) {
+	global void execute(Database.BatchableContext bc, List<Contact> scopedContacts) {
+		for (Contact c : scopedContacts) {
 			for (Account a : accounts) {
 				if (c.lastName == a.name && c.accountId != a.id) {
 					c.accountId = a.Id;
@@ -43,20 +43,23 @@ global class AssignContactsToAccountsBatch implements Database.Batchable<SObject
 				}
 			}
 		}
-	}
-
-	global void finish(Database.BatchableContext bc) {
 		/**
 		 *  Flatten List<List<Contact>> into List<Contact>
 		 *	DML update needs it
-		 */ 
+			*/ 
 		List<Contact> contactsToUpdate = new List<Contact>();
 		for (List<Contact> contacts: contactsByAccountsToUpdate.values()) {
 			contactsToUpdate.addAll(contacts);
 		}
 		try {
 			update contactsToUpdate;
+		} catch (DmlException e) {
+			System.debug(e);
+		}
+	}
 
+	global void finish(Database.BatchableContext bc) {
+		try {
 			Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
 			message.toAddresses = new String[] { 
 				UserInfo.getUserEmail()
@@ -71,7 +74,7 @@ global class AssignContactsToAccountsBatch implements Database.Batchable<SObject
 					message
 				}
 			);
-		} catch (Exception e) {
+		} catch (EmailException e) {
 			System.debug(e);
 		}
 	}

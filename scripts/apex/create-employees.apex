@@ -1,18 +1,19 @@
 Integer numOfEmployees = 1000;
 Integer numOfCompanies = 6;
+Integer randomNumber;
 List<Contact> employees = new List<Contact>();
 
-Integer j = 0;
 for (Integer i = 0; i < numOfEmployees; i++) {
-	Contact emploee = new Contact(
+	randomNumber = Integer.valueof((Math.random() * numOfCompanies));
+	Contact employee = new Contact(
 		firstName = 'Employee ' + i,
-		lastName = 'Company ' + j
+		lastName = 'Company ' + randomNumber
 	);
-	employees.add(emploee);
-
-	j++;
-	if (j >= numOfCompanies) {
-		j = 0;
-	}
+	employees.add(employee);
 }
-insert employees;
+
+try {
+	insert employees;
+} catch (DMLException e) {
+    System.System.debug(e);
+}

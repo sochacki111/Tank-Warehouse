@@ -5,4 +5,9 @@ for (Integer i = 0; i < numOfCompanies; i++) {
 	Account company = new Account(name = 'Company ' + i);
 	companies.add(company);
 }
-insert companies;
+
+try {
+	insert companies;
+} catch (DMLException e) {
+    System.System.debug(e);
+}
