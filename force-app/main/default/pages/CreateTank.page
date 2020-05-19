@@ -12,4 +12,5 @@
             </apex:pageBlockButtons>
         </apex:pageBlock>
     </apex:form>
+    <apex:outputLink value="/apex/Tanks">Go to Tank List</apex:outputLink>
 </apex:page>

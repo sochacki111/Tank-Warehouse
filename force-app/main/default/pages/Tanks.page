@@ -6,6 +6,6 @@
                 <apex:outputLink value="/apex/TankDetails?id={!tank.id}">{!tank.Name}</apex:outputLink>
             </apex:column>
         </apex:pageBlockTable>
-        <apex:outputLink value="/apex/CreateTank">New Tank</apex:outputLink>
     </apex:pageBlock>
+    <apex:outputLink value="/apex/CreateTank">New Tank</apex:outputLink>
 </apex:page>
