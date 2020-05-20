@@ -31,9 +31,18 @@ public class TankService {
 					oldValue = String.valueOf(oldTank.get(fieldName));
 					newValue = String.valueOf(tank.get(fieldName));
 					fieldLabel = tankFields.get(fieldName).getDescribe().getLabel();
-					actionHistory += 'CHANGED '+ fieldLabel + ' FROM ' + oldValue + ' TO ' + newValue + '\n';
+					actionHistory += 'Changed ' + 
+					'<strong>' + fieldLabel + '</strong>' + 
+					' from ' + 
+					oldValue + 
+					' to ' + 
+					'<strong>' + newValue + '</strong>' +
+					'<br/>';
 				}  
 			}
+		}
+		if (String.isBlank(actionHistory)) {
+			actionHistory = 'Empty Update';
 		}
 
         for (Tank__c tank : newTanks) {
