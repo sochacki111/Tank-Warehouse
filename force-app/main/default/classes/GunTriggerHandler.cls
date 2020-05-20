@@ -11,11 +11,11 @@ public class GunTriggerHandler {
 
 	public static void onBeforeUpdate(List<Gun__c> oldGuns, Map<Id,Gun__c> oldGunMap, List<Gun__c> newGuns, Map<Id,Gun__c> newGunMap){
 		System.debug('-- GunTriggerHandler.onBeforeUpdate --');
+		GunService.saveChangeHistory(oldGunMap, newGuns);
 	}
 
 	public static void onAfterUpdate(List<Gun__c> oldGuns, Map<Id,Gun__c> oldGunMap, List<Gun__c> newGuns, Map<Id,Gun__c> newGunMap){
         System.debug('-- GunTriggerHandler.onAfterUpdate --');
-        GunService.saveChangeHistory(newGuns);
 	}
 
 	public static void onBeforeDelete(List<Gun__c> oldGuns, Map<Id,Gun__c> oldGunMap){

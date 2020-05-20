@@ -14,10 +14,11 @@
     </script>
     <apex:form>
         <apex:pageMessages id="messages" />
-        <apex:pageBlock title="Tank {!Tank__c.Name}">
+        <apex:pageBlock id="pageBlock" title="Tank {!Tank__c.Name}">
             <apex:pageBlockButtons location="top">
                 <button type="button" id="editTank" onclick="toggleEditMode();">Edit Tank</button>
-                <apex:actionFunction action="{!updateTank}" name="updateTankAction" rerender="messages,tankDetails,tankRecordHistory" />
+                <apex:actionFunction action="{!updateTank}" name="updateTankAction" rerender="messages,tankDetails,tankRecordHistory,pageBlock"
+                />
                 <button type="button" id="updateTank" onClick="updateTankAction();toggleEditMode()" style="display:none">
                     Update Tank
                 </button>
@@ -25,12 +26,8 @@
             </apex:pageBlockButtons>
 
             <apex:pageBlockSection id="tankDetails" columns="1">
-                <apex:outputField value="{!Tank__c.Name}">
-                    <apex:inlineEditSupport event="ondblClick" showOnEdit="saveButton" />
-                </apex:outputField>
-                <apex:outputField value="{!Tank__c.Country__c}">
-                    <apex:inlineEditSupport event="ondblClick" showOnEdit="saveButton" />
-                </apex:outputField>
+                <apex:outputField value="{!Tank__c.Name}" />
+                <apex:outputField value="{!Tank__c.Country__c}" />
                 <apex:outputField value="{!Tank__c.NumberOfTurrets__c}" />
             </apex:pageBlockSection>
 
@@ -48,7 +45,7 @@
             </apex:pageBlockSection>
 
             <apex:pageBlockSection id="tankRecordHistory" title="Tank History" columns="1">
-                <apex:pageBlockTable value="{!tankRecordHistory}" var="history" id="theTable2">
+                <apex:pageBlockTable value="{!tankRecordHistory}" var="history">
                     <apex:column headervalue="Date">
                         <apex:outputText value="{0,date,dd/MM/yyyy HH:mm:ss}">
                             <apex:param value="{!history.date__c}"></apex:param>

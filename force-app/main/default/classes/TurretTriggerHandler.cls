@@ -11,11 +11,11 @@ public class TurretTriggerHandler {
 
 	public static void onBeforeUpdate(List<Turret__c> oldTurrets, Map<Id,Turret__c> oldTurretMap, List<Turret__c> newTurrets, Map<Id,Turret__c> newTurretMap){
 		System.debug('-- TurretTriggerHandler.onBeforeUpdate --');
+		TurretService.saveChangeHistory(oldTurretMap, newTurrets);
 	}
 
 	public static void onAfterUpdate(List<Turret__c> oldTurrets, Map<Id,Turret__c> oldTurretMap, List<Turret__c> newTurrets, Map<Id,Turret__c> newTurretMap){
         System.debug('-- TurretTriggerHandler.onAfterUpdate --');
-        TurretService.saveChangeHistory(newTurrets);
 	}
 
 	public static void onBeforeDelete(List<Turret__c> oldTurrets, Map<Id,Turret__c> oldTurretMap){

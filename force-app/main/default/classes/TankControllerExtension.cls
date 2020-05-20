@@ -67,7 +67,7 @@ public class TankControllerExtension {
             createdBy.name
             from TankHistory__c
             where Tank__c = :tank.id
-            order by name desc
+            order by date__c desc
             ];
             
         return tankHistories; 
