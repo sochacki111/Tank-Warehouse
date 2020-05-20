@@ -1,19 +1,33 @@
 public class TankControllerExtension {
-    public Tank__c tank { get; set; }
+    public Tank__c tank {get; set;}
 
     public TankControllerExtension(ApexPages.StandardController stdController) {
         this.tank = (Tank__c)stdController.getRecord();
     }
 
+    public List<Tank__c> getAllTanks() {
+        return [
+            select id,
+            name
+            from Tank__c
+            order by name asc
+        ];
+    }
+
     public PageReference createTank() {
+        PageReference pr = Page.Tanks;
+        pr.setRedirect(true);
+
         try {
-            insert tank.clone(false, false, false, false);
-            ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.CONFIRM, 'Tank has been created');
-            ApexPages.addMessage(myMsg);
-        } catch(DmlException e) {
+            upsert tank;
+        } catch(Exception e) {
             System.debug('The following exception has occurred: ' + e.getMessage());
+            ApexPages.Message errorMsg = new ApexPages.Message(ApexPages.Severity.ERROR, 'Something went wrong');
+            ApexPages.addMessage(errorMsg);
+
+            return null;
         }
-        return null;
+        return pr;
     }
 
     public PageReference updateTank() {
@@ -21,8 +35,10 @@ public class TankControllerExtension {
             update tank;
             ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.CONFIRM, 'Tank has been updated');
             ApexPages.addMessage(myMsg);
-        } catch(DmlException e) {
+        } catch(Exception e) {
             System.debug('The following exception has occurred: ' + e.getMessage());
+            ApexPages.Message errorMsg = new ApexPages.Message(ApexPages.Severity.ERROR, 'Something went wrong');
+            ApexPages.addMessage(errorMsg);
         }
         return null;
     }
@@ -30,14 +46,30 @@ public class TankControllerExtension {
     public PageReference deleteTank() {
         PageReference pr = Page.Tanks;
         pr.setRedirect(true);
-        pr.getParameters().put('message', 'Hello, World!');
+
         try {
             delete tank;
-            ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.CONFIRM, 'Tank has been removed');
-            ApexPages.addMessage(myMsg);
-        } catch(DmlException e) {
+        } catch(Exception e) {
             System.debug('The following exception has occurred: ' + e.getMessage());
+            ApexPages.Message errorMsg = new ApexPages.Message(ApexPages.Severity.ERROR, 'Something went wrong');
+            ApexPages.addMessage(errorMsg);
+
+            return null;
         }
         return pr;
+    }
+
+    public List<TankHistory__c> getTankRecordHistory() {
+        List<TankHistory__c> tankHistories = [
+            select id,
+            action__c,
+            date__c,
+            createdBy.name
+            from TankHistory__c
+            where Tank__c = :tank.id
+            order by name desc
+            ];
+            
+        return tankHistories; 
     }
 }
