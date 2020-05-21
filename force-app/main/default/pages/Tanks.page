@@ -1,0 +1,11 @@
+<apex:page standardController="Tank__c" extensions="TankControllerExtension">
+    <apex:pageMessages id="messages" />
+    <apex:pageBlock title="Tank List">
+        <apex:pageBlockTable value="{!allTanks}" var="tank">
+            <apex:column headerValue="Tanks">
+                <apex:outputLink value="/apex/TankDetails?id={!tank.id}">{!tank.Name}</apex:outputLink>
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    <apex:outputLink value="/apex/CreateTank">New Tank</apex:outputLink>
+</apex:page>

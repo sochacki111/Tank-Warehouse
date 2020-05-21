@@ -1,9 +1,53 @@
-<apex:page standardController="Gun__c">
-    <apex:pageBlock>
-        <apex:pageBlockSection title="Gun Details" columns="1">
-            <apex:outputField value="{!Gun__c.Name}" />
-            <apex:outputField value="{!Gun__c.Caliber__c}" />
-            <apex:outputField label="Tank Country" value="{!Gun__c.Turret__r.Tank__r.Country__c}" />
-        </apex:pageBlockSection>
-    </apex:pageBlock>
+<apex:page standardController="Gun__c" extensions="GunControllerExtension">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function toggleEditMode() {
+            $("[id$=gunDetailsEdit]").toggle();
+            $("[id$=gunDetails]").toggle();
+            $("[id$=cancelEditGun]").toggle();
+            $("[id$=editGun]").toggle();
+            $("[id$=updateGun]").toggle();
+        }
+    </script>
+    <apex:form>
+        <apex:pageMessages id="messages" />
+        <apex:pageBlock id="pageBlock" title="Gun {!Gun__c.Name}">
+            <apex:pageBlockButtons location="top">
+                <button type="button" id="editGun" onclick="toggleEditMode();">Edit Gun</button>
+                <apex:actionFunction action="{!updateGun}" name="updateGunAction" rerender="messages,gunDetails,gunRecordHistory,pageBlock"
+                />
+                <button type="button" id="updateGun" onClick="updateGunAction();toggleEditMode()" style="display:none">
+                    Update Gun
+                </button>
+                <button type="button" id="cancelEditGun" onclick="toggleEditMode();" style="display:none">Cancel Edit Gun</button>
+            </apex:pageBlockButtons>
+
+            <apex:pageBlockSection id="gunDetails" columns="1">
+                <apex:outputField value="{!Gun__c.Name}" />
+                <apex:outputField value="{!Gun__c.Caliber__c}" />
+                <apex:outputField value="{!Gun__c.Turret__r.Tank__r.Country__c}" />
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="gunDetailsEdit" columns="1" html-style="display:none">
+                <apex:inputField value="{!Gun__c.Name}" />
+                <apex:inputField value="{!Gun__c.Caliber__c}" />
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="gunRecordHistory" title="Gun History" columns="1">
+                <apex:pageBlockTable value="{!gunRecordHistory}" var="history">
+                    <apex:column headervalue="Date">
+                        <apex:outputText value="{0,date,dd/MM/yyyy HH:mm:ss}">
+                            <apex:param value="{!history.date__c}"></apex:param>
+                        </apex:outputText>
+                    </apex:column>
+                    <apex:column headervalue="Action">
+                        <apex:outputText value="{!history.action__c}" escape="false" />
+                    </apex:column>
+                    <apex:column headervalue="User">
+                        <apex:outputText value="{!history.createdBy.name}" />
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
 </apex:page>

@@ -1,14 +1,61 @@
-<apex:page standardController="Turret__c">
-    <apex:pageBlock>
-        <apex:pageBlockSection title="Turret Details" columns="1">
-            <apex:outputField value="{!Turret__c.Name}" />
-            <apex:outputField value="{!Turret__c.ManholeNumber__c}" />
-            <apex:outputField value="{!Turret__c.Tank__r.Name}" />
+<apex:page standardController="Turret__c" extensions="TurretControllerExtension">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function toggleEditMode() {
+            $("[id$=turretDetailsEdit]").toggle();
+            $("[id$=turretDetails]").toggle();
+            $("[id$=cancelEditTurret]").toggle();
+            $("[id$=editTurret]").toggle();
+            $("[id$=updateTurret]").toggle();
+        }
+    </script>
+    <apex:form>
+        <apex:pageMessages id="messages" />
+        <apex:pageBlock id="pageBlock" title="Turret {!Turret__c.Name}">
+            <apex:pageBlockButtons location="top">
+                <button type="button" id="editTurret" onclick="toggleEditMode();">Edit Turret</button>
+                <apex:actionFunction action="{!updateTurret}" name="updateTurretAction" rerender="messages,turretDetails,turretRecordHistory,pageBlock"
+                />
+                <button type="button" id="updateTurret" onClick="updateTurretAction();toggleEditMode()" style="display:none">
+                    Update Turret
+                </button>
+                <button type="button" id="cancelEditTurret" onclick="toggleEditMode();" style="display:none">Cancel Edit Turret</button>
+            </apex:pageBlockButtons>
 
-            <apex:pageBlockTable value="{!Turret__c.Gun__r}" var="gun">
-                <apex:column value="{!gun.Name}" />
-                <apex:column value="{!gun.Caliber__c}" />
-            </apex:pageBlockTable>
-        </apex:pageBlockSection>
-    </apex:pageBlock>
+            <apex:pageBlockSection id="turretDetails" columns="1">
+                <apex:outputField value="{!Turret__c.Name}" />
+                <apex:outputField value="{!Turret__c.ManholeNumber__c}" />
+                <apex:outputField value="{!Turret__c.Tank__r.Name}" />
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="turretDetailsEdit" columns="1" html-style="display:none">
+                <apex:inputField value="{!Turret__c.Name}" />
+                <apex:inputField value="{!Turret__c.ManholeNumber__c}" />
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Guns" columns="1">
+                <apex:pageBlockTable value="{!Turret__c.Gun__r}" var="gun">
+                    <apex:column headerValue="Gun Name">
+                        <apex:outputLink value="/apex/GunDetails?id={!gun.id}">{!gun.Name}</apex:outputLink>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="turretRecordHistory" title="Turret History" columns="1">
+                <apex:pageBlockTable value="{!turretRecordHistory}" var="history">
+                    <apex:column headervalue="Date">
+                        <apex:outputText value="{0,date,dd/MM/yyyy HH:mm:ss}">
+                            <apex:param value="{!history.date__c}"></apex:param>
+                        </apex:outputText>
+                    </apex:column>
+                    <apex:column headervalue="Action">
+                        <apex:outputText value="{!history.action__c}" escape="false" />
+                    </apex:column>
+                    <apex:column headervalue="User">
+                        <apex:outputText value="{!history.createdBy.name}" />
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
 </apex:page>

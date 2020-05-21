@@ -1,4 +1,9 @@
 <apex:page standardController="Tank__c" extensions="TankControllerExtension">
+    <script>
+        function displayTankCreationInfo() {
+            alert('You pressed Create Tank button\nIf the record creation is successful you will be redireced to Tank list');
+        }
+    </script>
     <apex:form>
         <apex:pageMessages id="messages" />
         <apex:pageBlock title="Create Tank">
@@ -6,10 +11,14 @@
                 <apex:inputField value="{!Tank__c.Name}" />
                 <apex:inputField value="{!Tank__c.Country__c}" />
             </apex:pageBlockSection>
-            <apex:pageBlockButtons>
-                <apex:commandButton value="Save" action="{!save}" />
-                <apex:commandButton value="Save using extension" action="{!createTank}" />
+
+            <apex:pageBlockButtons location="bottom">
+                <apex:actionFunction action="{!createTank}" name="createTankAction" />
+                <button type="button" id="deleteTank" onClick="displayTankCreationInfo();createTankAction();">
+                    Create Tank
+                </button>
             </apex:pageBlockButtons>
         </apex:pageBlock>
     </apex:form>
+    <apex:outputLink value="/apex/Tanks">Go to Tank List</apex:outputLink>
 </apex:page>
