@@ -1,11 +1,6 @@
 public class TankService {
     public static void isDuplicate(List<Tank__c> changedTanks) {
-        List<Tank__c> tanks = [
-            select id,
-            name,
-            country__c
-            from Tank__c
-        ];
+        List<Tank__c> tanks = TanksSelector.findAll();
 
         for (Tank__c newTank : changedTanks) {
             for (Tank__c tank : tanks) {
