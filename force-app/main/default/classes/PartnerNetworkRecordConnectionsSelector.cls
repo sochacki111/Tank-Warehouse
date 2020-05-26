@@ -1,9 +1,9 @@
 public class PartnerNetworkRecordConnectionsSelector {
-    public static Database.QueryLocator findAllSentRecords() {
+    public static Database.QueryLocator findAllPublishedRecords(Id connectionId) {
         return Database.getQueryLocator([
             select localRecordId
             from PartnerNetworkRecordConnection
-            where connectionId = '04P5I000000GmaY'
+            where connectionId = :connectionId
         ]);
     }
 

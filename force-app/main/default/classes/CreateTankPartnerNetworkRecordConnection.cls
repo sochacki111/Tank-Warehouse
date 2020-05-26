@@ -1,30 +1,31 @@
 public class CreateTankPartnerNetworkRecordConnection implements Queueable {
     
-    private List<Tank__c> tanks;
+    private Map<Id,Tank__c> newTankMap;
     private List<PartnerNetworkRecordConnection> pnrcsToInsert;
     private SalesforceToSalesforceConnection__c s2s;
     private Id connectionId;
-    private String emailAddress;
 
-    public CreateTankPartnerNetworkRecordConnection(List<Tank__c> tanks) {
-        this.tanks = tanks;
+
+    public CreateTankPartnerNetworkRecordConnection(Map<Id,Tank__c> newTankMap) {
+        this.pnrcsToInsert = new List<PartnerNetworkRecordConnection>();
+        this.newTankMap = newTankMap;
         this.s2s = SalesforceToSalesforceConnection__c.getInstance();
         this.connectionId = (Id)s2s.get('connectionId__c');
-        this.emailAddress = (String)s2s.get('emailAddressNotification__c');
     }
 
     public void execute(QueueableContext context) {
-        for (Tank__c tank : tanks) { 
-            // TODO Check whether record is subscribed from other Salesforce instance. If it's not then create pnrc from that record 
-            PartnerNetworkRecordConnection pnrc = new PartnerNetworkRecordConnection(
-                ConnectionId = connectionId,
-                LocalRecordId = tank.Id
-            );
-
-            pnrcsToInsert.add(pnrc);
+        Set<id> sharedRecordIds = PartnerNetworkRecordConnectionsSelector.findAllLocalRecordIds();
+        for (Id tankId : newTankMap.keySet()) { 
+            // TODO get tank ids from newTankMap that are not shared in more elegant way than looping over every id
+            //select id from Tank__c where id not in :sharedRecordIds
+            if (!sharedRecordIds.contains(tankId)) {
+                PartnerNetworkRecordConnection pnrc = new PartnerNetworkRecordConnection(
+                    connectionId = connectionId,
+                    localRecordId = tankId
+                );
+                pnrcsToInsert.add(pnrc);
+            }
         }
-        
-        // TODO Send error report to emailAddress 
 
         insert pnrcsToInsert;
     }

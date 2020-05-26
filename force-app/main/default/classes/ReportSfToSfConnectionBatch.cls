@@ -6,11 +6,9 @@ global class ReportSfToSfConnectionBatch implements Database.Batchable<SObject>,
     private DateTime lastSyncDate;
     private List<PartnerNetworkRecordConnection> sharedRecords;
     private List<PartnerNetworkRecordConnection> publishedRecords;
-    private List<PartnerNetworkRecordConnection> notPublishedRecords;
+    private Set<Id> notSharedTankIds;
 
     public ReportSfToSfConnectionBatch() {
-        this.publishedRecords = new List<PartnerNetworkRecordConnection>();
-        this.notPublishedRecords = new List<PartnerNetworkRecordConnection>();
         this.s2s = SalesforceToSalesforceConnection__c.getInstance();
         this.connectionId = (Id)s2s.get('connectionId__c');
         this.emailAddress = (String)s2s.get('emailAddressNotification__c');
@@ -18,37 +16,40 @@ global class ReportSfToSfConnectionBatch implements Database.Batchable<SObject>,
         this.sharedRecords = [
             select localRecordId
             from PartnerNetworkRecordConnection
-            where connectionId = this.connectionId;
+            where startDate != null and startDate > :(DateTime)s2s.get('lastSyncDate__c')
         ];
+        this.publishedRecords = [
+            select localRecordId
+            from PartnerNetworkRecordConnection
+            where connectionId = :this.connectionId
+            and startDate != null and startDate > :(DateTime)s2s.get('lastSyncDate__c')
+        ];
+        this.notSharedTankIds = new Set<Id>();
     }
 
     global Database.QueryLocator start(Database.BatchableContext bc) {
-        // TODO Create PNRC Selector that returns Database.QueryLocator
-        // return Database.getQueryLocator([
-        //     select localRecordId
-        //     from PartnerNetworkRecordConnection
-        //     where connectionId = :connectionId
-        //     and startDate != null and startDate > :(DateTime)s2s.get('lastSyncDate__c')
-        // ]);
         return Database.getQueryLocator([
             select id
             from Tank__c
             where createdDate > :(DateTime)s2s.get('lastSyncDate__c')
-        ])
+        ]);
     }
 
     global void execute(Database.BatchableContext bc, List<Tank__c> tanks) {
-        for (Tank__c tank : tanks) {
+        Set<Id> notSharedTankIds = (new Map<Id,Tank__c>(tanks)).keySet();
 
-        }
+            for (PartnerNetworkRecordConnection sharedRecord : sharedRecords) {
+                notSharedTankIds.remove(sharedRecord.localRecordId);
+            }
+        
     }
 
     global void finish(Database.BatchableContext bc) {
         s2s.put('lastSyncDate__c', lastSyncDate);
         upsert s2s;
 
-        AsyncApexJob a = [
-            select id, Status, NumberOfErrors, extendedStatus
+        AsyncApexJob thisApexBatch = [
+            select id, status, numberOfErrors, extendedStatus
             from AsyncApexJob
             where Id = :bc.getJobId()
             limit 1
@@ -62,19 +63,32 @@ global class ReportSfToSfConnectionBatch implements Database.Batchable<SObject>,
             message.subject = 'ReportSfToSfConnectionBatch finished';
 
             message.plainTextBody = 'ReportSfToSfConnectionBatch finished:\n';
-            if (!String.isBlank(a.extendedStatus)) {
-                message.plainTextBody += 'Following error occured during Batch processing:\n';
-                message.plainTextBody += a.extendedStatus + '\n';
+            if (!String.isBlank(thisApexBatch.extendedStatus)) {
+                message.plainTextBody += 'Following error occured during Batch processing:\n' +
+                    thisApexBatch.extendedStatus + '\n' +
+                    'Total number of errors:\n' +
+                    thisApexBatch.numberOfErrors + '\n';
+            } else {
+                message.plainTextBody += 'No error occured!\n';
             }
             message.plainTextBody += 'Published records:\n';
             if (publishedRecords.size() > 0){
                 for (PartnerNetworkRecordConnection pnrc : publishedRecords) {
                     message.plainTextBody += pnrc.localRecordId + '\n';
                 }
+            } else {
+                message.plainTextBody += 'No new shared records!\n';
             }
-            message.plainTextBody += 'Not published records:\n';
-            message.plainTextBody += 'Last Sync Date:\n';
-            message.plainTextBody += s2s.get('lastSyncDate__c');
+            if (notSharedTankIds.size() > 0) {
+                message.plainTextBody += 'Not shared records:\n';
+                for (Id tankId : notSharedTankIds) {
+                    message.plainTextBody += tankId + '\n';
+                }
+            } else {
+                message.plainTextBody += 'All records are shared!\n';
+            }
+            message.plainTextBody += 'Last Sync Date:\n' +
+                s2s.get('lastSyncDate__c');
 
             List<Messaging.SendEmailResult> results = Messaging.sendEmail(
                 new List<Messaging.SingleEmailMessage> {
