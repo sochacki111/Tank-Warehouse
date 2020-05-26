@@ -8,6 +8,8 @@ public class TankTriggerHandler {
     public static void onAfterInsert(List<Tank__c> newTanks, Map<Id,Tank__c> newTankMap){
         System.debug('-- TankTriggerHandler.onAfterInsert --');
         TankService.saveChangeHistory(newTanks);
+         // TODO Is it a good practice to pass all newTanks into Queueable and to check there from which local record create pnrc?  
+        System.enqueuejob(new CreateTankPartnerNetworkRecordConnection(newTankMap));
     }
 
     public static void onBeforeUpdate(List<Tank__c> oldTanks, Map<Id,Tank__c> oldTankMap, List<Tank__c> newTanks, Map<Id,Tank__c> newTankMap){
