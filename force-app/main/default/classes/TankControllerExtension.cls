@@ -8,7 +8,7 @@ public class TankControllerExtension {
     public List<Tank__c> getAllTanks() {
         return [
             select id,
-            name
+            name, numberOfTurrets__c
             from Tank__c
             order by name asc
         ];
