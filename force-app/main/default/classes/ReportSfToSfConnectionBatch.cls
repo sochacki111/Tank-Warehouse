@@ -41,7 +41,6 @@ global class ReportSfToSfConnectionBatch implements Database.Batchable<SObject>,
             for (PartnerNetworkRecordConnection sharedRecord : sharedRecords) {
                 notSharedTankIds.remove(sharedRecord.localRecordId);
             }
-        
     }
 
     global void finish(Database.BatchableContext bc) {
