@@ -5,6 +5,27 @@ public class TankControllerExtension {
         this.tank = (Tank__c)stdController.getRecord();
     }
 
+    @InvocableMethod(label='Change Turret Names')
+    public static void changeTurretNamesFromParentTankCountry(List<Id> tankIds) {
+        List<Turret__c> turrets = [
+            select id,
+            name,
+            tank__r.country__c
+            from Turret__c
+            where tank__c in :tankIds
+        ];
+
+        for (Turret__c turret : turrets) {
+            turret.name = turret.tank__r.country__c + ': ' + turret.name;
+        }
+
+        try {
+            update turrets;
+        } catch (Exception e) {
+            System.debug('Something went wrong');
+        }
+    }
+
     public List<Tank__c> getAllTanks() {
         return [
             select id,
